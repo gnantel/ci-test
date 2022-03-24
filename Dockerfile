@@ -8,7 +8,7 @@
 # This limitation will change in the future as are likely to move away from large executable jar file which don't lend
 # themselves well to layering.
 
-FROM ncr.nuance.com/docker.io/ubuntu:20.04
+FROM ubuntu:20.04
 ARG APPLICATION_NAME
 
 RUN apt update \
