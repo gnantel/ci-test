@@ -18,7 +18,7 @@ jobs:
       applicationDirectory: cats
       artifactId: 1.0.0-gh${{ github.run_number }}
       containerRegistryHost: hub.docker.com
-      containerRegistryRepository: ci-test
+      containerRegistryRepository: nuancecoretech
     secrets:
       containerRegistryUsername: DEV_ARTIFACTORY_USERNAME
       containerRegistryPassword: DEV_ARTIFACTORY_PASSWORD
