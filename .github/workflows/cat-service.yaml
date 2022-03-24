@@ -17,8 +17,12 @@ jobs:
       applicationModule: cat-service
       applicationDirectory: cats
       artifactId: 1.0.0-gh${{ github.run_number }}
-      containerRegistryHost: hub.docker.com
-      containerRegistryRepository: nuancecoretech
+      containerRegistryHost: ghcr.io
+      containerRegistryRepository: ${{ github.repository_owner }}
+#      containerRegistryHost: hub.docker.com
+#      containerRegistryRepository: nuancecoretech
     secrets:
-      containerRegistryUsername: DEV_ARTIFACTORY_USERNAME
-      containerRegistryPassword: DEV_ARTIFACTORY_PASSWORD
+      containerRegistryUsername: ${{ github.actor }}
+      containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+#      containerRegistryUsername: DEV_ARTIFACTORY_USERNAME
+#      containerRegistryPassword: DEV_ARTIFACTORY_PASSWORD
