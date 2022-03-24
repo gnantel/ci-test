@@ -1,0 +1,28 @@
+name: Cat Service
+
+on:
+  push:
+    paths:
+      - cats/** # Everything under cats
+      - pet-*parent/**
+      - .github/workflows/cat-service.yaml
+      - .github/workflows/application-build.yml
+      - .github/actions/**
+      - Dockerfile
+
+jobs:
+  build:
+    uses: ./.github/workflows/application-build.yml
+    with:
+      applicationModule: cat-service
+      applicationDirectory: cats
+      artifactId: 1.0.0-gh${{ github.run_number }}
+      containerRegistryHost: ghcr.io
+      containerRegistryRepository: ${{ github.repository_owner }}
+#      containerRegistryHost: hub.docker.com
+#      containerRegistryRepository: nuancecoretech
+    secrets:
+      containerRegistryUsername: ${{ github.actor }}
+      containerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+#      containerRegistryUsername: DEV_ARTIFACTORY_USERNAME
+#      containerRegistryPassword: DEV_ARTIFACTORY_PASSWORD
