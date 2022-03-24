@@ -9,7 +9,7 @@ on:
       applicationDirectory:
         required: true
         type: string
-      version:
+      artifactId:
         required: true
         type: string
       containerRegistryHost:
@@ -23,9 +23,6 @@ on:
         required: true
       containerRegistryPassword:
         required: true
-
-env:
-  ARTIFACT_ID: ${{ inputs.version }}-gh{{ github.run_number }}
 
 jobs:
   build:
@@ -68,5 +65,5 @@ jobs:
           file: ./Dockerfile
           context: ./${{ inputs.applicationDirectory }}/${{ inputs.applicationModule }}/target/package
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.ARTIFACT_ID }}
+          tags: ${{ env.IMAGE_NAME }}:${{ inputs.artifactId }}
           build-args: APPLICATION_NAME=${{ inputs.applicationModule }}
