@@ -1,11 +1,12 @@
-name: NLU Modeling Service
+name: Cat Service
 
 on:
   push:
     paths:
       - cats/** # Everything under cats
       - pet-*parent/**
-      - .github/workflows/cat-service.yml
+      - .github/workflows/cat-service.yaml
+      - .github/workflows/application-build.yml
       - .github/actions/**
       - Dockerfile
 
