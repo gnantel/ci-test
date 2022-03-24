@@ -1,0 +1,16 @@
+# IDEA
+*.iml
+
+# Maven
+target/
+.flattened-pom.xml
+
+# Dev
+dev/
+
+# MacOS
+.DS_Store
+# jEnv (jdk version management tool)
+.java-version
+# asdf (version manager for tools such as kubectl, helm, etc.)
+.tool-versions

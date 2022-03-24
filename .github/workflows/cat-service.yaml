@@ -1,0 +1,19 @@
+name: NLU Modeling Service
+
+on:
+  push:
+    paths:
+      - cats/** # Everything under cats
+      - pet-*parent/**
+      - .github/workflows/cat-service.yml
+      - .github/actions/**
+      - Dockerfile
+
+jobs:
+  build:
+    runs-on: self-hosted
+    uses: ./.github/workflows/application-build.yml
+    with:
+      applicationModule: cat-service
+      applicationDirectory: cats
+      version: 1.0.0

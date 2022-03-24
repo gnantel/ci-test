@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<settings 
+    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"
+    xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <servers>
+        <server>
+            <id>entrd-jfrog.ent.nuance.com</id>
+            <username>relmgr</username>
+            <password>{qWwUHz+ZTb8Hne7dyuW2uwRckratR9wlWJUmbKaPl58=}</password>
+        </server>
+    </servers>
+
+    <profiles>
+        <profile>
+            <id>artifactory</id>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <id>central</id>
+                    <name>libs-release</name>
+                    <url>https://entrd-jfrog.ent.nuance.com/artifactory/libs-release/</url>
+                </repository>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <id>snapshots</id>
+                    <name>libs-snapshot</name>
+                    <url>https://entrd-jfrog.ent.nuance.com/artifactory/libs-snapshot/</url>
+                </repository>
+            </repositories>
+            
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <id>central</id>
+                    <name>plugins-release</name>
+                    <url>https://entrd-jfrog.ent.nuance.com/artifactory/plugins-release/</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <id>snapshots</id>
+                    <name>plugins-snapshot</name>
+                    <url>https://entrd-jfrog.ent.nuance.com/artifactory/plugins-snapshot/</url>
+                </pluginRepository>
+            </pluginRepositories>
+
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>artifactory</activeProfile>
+    </activeProfiles>
+
+</settings>
+
