@@ -16,7 +16,7 @@ jobs:
     with:
       applicationModule: cat-service
       applicationDirectory: cats
-      artifactId: 1.0.0-gh{{ github.run_number }}
+      artifactId: 1.0.0-gh${{ github.run_number }}
       containerRegistryHost: dockerhub.com
       containerRegistryRepository: ci-test
     secrets:
