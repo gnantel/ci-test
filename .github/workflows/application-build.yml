@@ -37,14 +37,13 @@ jobs:
             -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN
             -Dorg.slf4j.simpleLogger.showDateTime=true
           MAVEN_CLI_OPTS: >-
-            --settings .github/maven-settings.xml
             --batch-mode --errors --show-version --update-snapshots
         run: |
           mvn $MAVEN_CLI_OPTS install -f pet-parent -pl :${{ inputs.applicationModule }} -am
       - name: Dev artifactory login
         uses: azure/docker-login@v1
         with:
-          login-server: ncr.nuance.com
+          login-server: dockerhub.com
           username: ${{ secrets.DEV_ARTIFACTORY_USERNAME }}
           password: ${{ secrets.DEV_ARTIFACTORY_PASSWORD }}
       - name: Set up Docker Buildx
