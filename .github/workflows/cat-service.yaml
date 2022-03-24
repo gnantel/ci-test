@@ -17,6 +17,8 @@ jobs:
       applicationModule: cat-service
       applicationDirectory: cats
       version: 1.0.0
+      containerRegistryHost: dockerhub.com
+      containerRegistryRepository: ci-test
     secrets:
-      dockerUsername: DEV_ARTIFACTORY_USERNAME
-      dockerPassword: DEV_ARTIFACTORY_PASSWORD
+      containerRegistryUsername: DEV_ARTIFACTORY_USERNAME
+      containerRegistryPassword: DEV_ARTIFACTORY_PASSWORD

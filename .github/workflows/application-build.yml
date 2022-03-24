@@ -12,10 +12,16 @@ on:
       version:
         required: true
         type: string
-    secrets:
-      dockerUsername:
+      containerRegistryHost:
         required: true
-      dockerPassword:
+        type: string
+      containerRegistryRepository:
+        required: true
+        type: string
+    secrets:
+      containerRegistryUsername:
+        required: true
+      containerRegistryPassword:
         required: true
 
 env:
@@ -48,16 +54,16 @@ jobs:
       - name: Dev artifactory login
         uses: azure/docker-login@v1
         with:
-          login-server: dockerhub.com
-          username: ${{ secrets.dockerUsername }}
-          password: ${{ secrets.dockerPassword }}
+          login-server: ${{ inputs.containerRegistryHost }}
+          username: ${{ secrets.containerRegistryUsername }}
+          password: ${{ secrets.containerRegistryPassword }}
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
       - name: Docker build and push
         uses: docker/build-push-action@v2
         env:
-          IMAGE_NAME: ncr.nuance.com/xnluaas-docker-dev/${{ inputs.applicationModule }}
+          IMAGE_NAME: ${{ inputs.containerRegistryHost }}/${{ inputs.containerRegistryRepository }}/${{ inputs.applicationModule }}
         with:
           file: ./Dockerfile
           context: ./${{ inputs.applicationDirectory }}/${{ inputs.applicationModule }}/target/package
