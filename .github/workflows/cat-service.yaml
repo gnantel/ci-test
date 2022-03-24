@@ -17,3 +17,6 @@ jobs:
       applicationModule: cat-service
       applicationDirectory: cats
       version: 1.0.0
+    secrets:
+      dockerUsername: DEV_ARTIFACTORY_USERNAME
+      dockerPassword: DEV_ARTIFACTORY_PASSWORD

@@ -12,6 +12,11 @@ on:
       version:
         required: true
         type: string
+    secrets:
+      dockerUsername:
+        required: true
+      dockerPassword:
+        required: true
 
 env:
   ARTIFACT_ID: ${{ inputs.version }}-gh{{ github.run_number }}
@@ -44,8 +49,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: dockerhub.com
-          username: ${{ secrets.DEV_ARTIFACTORY_USERNAME }}
-          password: ${{ secrets.DEV_ARTIFACTORY_PASSWORD }}
+          username: ${{ secrets.dockerUsername }}
+          password: ${{ secrets.dockerPassword }}
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
