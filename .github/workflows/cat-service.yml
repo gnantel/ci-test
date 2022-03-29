@@ -7,7 +7,7 @@ on:
     paths:
       - cats/** # Everything under cats
       - pet-*parent/**
-      - .github/workflows/cat-service.yaml
+      - .github/workflows/cat-service.yml
       - .github/workflows/application-build.yml
       - .github/actions/**
       - Dockerfile
