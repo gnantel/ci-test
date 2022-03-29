@@ -16,11 +16,11 @@ jobs:
     outputs:
       cat-service: ${{ steps.cat-service.outputs.last-run-number }}
     steps:
+      - uses: actions/checkout@v2
       - id: cat-service
         name: Get latest cat-service run number
         run: |
           ls -l .github/scripts
-          chmod u+x .github/scripts/*.sh
           .github/scripts/output-last-workflow-run-number.sh cat-service ${{ github.repository }}
           
   release-notes:
@@ -73,6 +73,7 @@ jobs:
     if: endsWith(inputs.version, '.0') # Main branch releases result in a minor version number bump
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Bump minor version
         run: |
           .github/scripts/bump-maven-revision.sh ${{ inputs.version }} minor pet-parent/pom.xml
@@ -87,6 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: maintenance-branch
     steps:
+      - uses: actions/checkout@v2
       - name: Bump patch version
         run: |
           .github/scripts/bump-maven-revision.sh ${{ inputs.version }} patch pet-parent/pom.xml
