@@ -22,6 +22,9 @@ sed -i 's/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revisi
 
 MESSAGE="Bump $BRANCH_NAME $VERSION_TYPE version to $NEW_VERSION"
 DEV_BRANCH_NAME=feature/bump-$VERSION_TYPE-version-in-$BRANCH_NAME
+
+echo Token: $GITHUB_TOKEN
+
 git checkout -b $DEV_BRANCH_NAME
 git commit $POM_FILE -m "$MESSAGE"
 git push -u origin $DEV_BRANCH_NAME

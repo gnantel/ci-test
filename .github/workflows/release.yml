@@ -1,14 +1,18 @@
 name: Pet Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: the version of the release (will eventually come from the tag itself)
-        required: true
+  push:
+    tags:
+      - [0-9]+.[0-9]+.[0-9]+
+#  workflow_dispatch:
+#    inputs:
+#      version:
+#        description: the version of the release (will eventually come from the tag itself)
+#        required: true
 
 env:
-  VERSION: ${{ github.event.inputs.version }}
+#  VERSION: ${{ github.event.inputs.version }}
+  VERSION: ${{ github.ref_name }}
 
 jobs:
   validate-version:
@@ -28,8 +32,9 @@ jobs:
       - uses: actions/checkout@v2
       - id: cat-service
         name: Get latest cat-service run number
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ls -l .github/scripts
           .github/scripts/output-last-workflow-run-number.sh cat-service ${{ github.repository }}
           
   release-notes:
@@ -96,6 +101,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git config user.name "GitHub Release Workflow"
+          git config user.email "<>"
           .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor pet-parent/pom.xml
 #          currentMinorVersion=$(echo $VERSION | sed -r s/^\[0-9]+\.\([0-9]+\)\.[0-9]+$/\\1/)
 #          newMinorVersion=$((currentMinorVersion + 1))
@@ -113,6 +120,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git config user.name "GitHub Release Workflow"
+          git config user.email "<>"
           .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} patch pet-parent/pom.xml
 #          currentPatchVersion=$(echo $VERSION | sed -r s/^\[0-9]+\.[0-9]+\.\([0-9]+\)$/\\1/)
 #          newPatchVersion=$((currentPatchVersion + 1))
