@@ -53,10 +53,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: last-run-numbers
     steps:
-      name: Promote to ACR
-      run: |
-        echo "This would be where we would promote the latest builds"
-        echo "Promoting cat-service build ${{ inputs.version }}-gh${{ needs.last-run-numbers.cat-service }}"
+      - name: Promote to ACR
+        run: |
+          echo "This would be where we would promote the latest builds"
+          echo "Promoting cat-service build ${{ inputs.version }}-gh${{ needs.last-run-numbers.cat-service }}"
 
   maintenance-branch:
     if: endsWith(inputs.version, ".0") # Only versions on the main branch have no patch version
