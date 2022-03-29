@@ -19,6 +19,8 @@ jobs:
       - id: cat-service
         name: Get latest cat-service run number
         run: |
+          ls -l .github/scripts
+          chmod u+x .github/scripts/*.sh
           .github/scripts/output-last-workflow-run-number.sh cat-service ${{ github.repository }}
           
   release-notes:
