@@ -13,6 +13,7 @@ jobs:
   validate-version:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Validate version number
         run: |
           echo Verifying that ${{ env.VERSION }} is the same as parent POM version
