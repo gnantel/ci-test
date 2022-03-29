@@ -59,7 +59,7 @@ jobs:
           echo "Promoting cat-service build ${{ inputs.version }}-gh${{ needs.last-run-numbers.cat-service }}"
 
   maintenance-branch:
-    if: endsWith(inputs.version, ".0") # Only versions on the main branch have no patch version
+    if: endsWith(inputs.version, '.0') # Only versions on the main branch have no patch version
     runs-on: ubuntu-latest
     steps:
       - name: Create maintenance branch
