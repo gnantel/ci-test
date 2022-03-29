@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "These are the release notes" >> release-notes.txt
           echo "Application build numbers in this release:" >> release-notes.txt
-          echo "* cat-service: $VERSION-gh${{ needs.last-run-numbers.outputs.cat-service }}" >> release-notes.txt
+          echo "* cat-service: ${{ env.VERSION }}-gh${{ needs.last-run-numbers.outputs.cat-service }}" >> release-notes.txt
       - name: Upload release notes artifact
         uses: actions/upload-artifact@v3
         with:
@@ -49,7 +49,7 @@ jobs:
           name: release-notes
       - name: Create GitHub release
         run: |
-          gh release create $VERSION --notes-file release-notes.txt
+          gh release create ${{ env.VERSION }} --notes-file release-notes.txt
 
   promote:
     runs-on: ubuntu-latest
@@ -58,8 +58,8 @@ jobs:
       - name: Promote to ACR
         run: |
           echo "This would be where we would promote the latest builds"
-          echo $VERSION
-          echo "Promoting cat-service build $VERSION-gh${{ needs.last-run-numbers.outputs.cat-service }}"
+          echo ${{ env.VERSION }}
+          echo "Promoting cat-service build ${{ env.VERSION }}-gh${{ needs.last-run-numbers.outputs.cat-service }}"
 
   maintenance-branch:
     if: endsWith(github.event.inputs.version, '.0') # Only versions on the main branch have no patch version
@@ -67,9 +67,9 @@ jobs:
     steps:
       - name: Create maintenance branch
         run: |
-          BRANCH_NAME=$(echo $VERSION | sed -r s/^\([0-9]+\.[0-9]+\.\)[0-9]+$/\\1x/)
+          BRANCH_NAME=$(echo ${{ env.VERSION }} | sed -r s/^\([0-9]+\.[0-9]+\.\)[0-9]+$/\\1x/)
           echo Creating maintenance branch $BRANCH_NAME
-          git push origin origin/$VERSION:refs/heads/$BRANCH_NAME
+          git push origin origin/${{ env.VERSION }}:refs/heads/$BRANCH_NAME
 
   main-minor-version-bump:
     if: endsWith(github.event.inputs.version, '.0') # Main branch releases result in a minor version number bump
@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Bump minor version
         run: |
-          .github/scripts/bump-maven-revision.sh $VERSION minor pet-parent/pom.xml
+          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor pet-parent/pom.xml
 #          currentMinorVersion=$(echo $VERSION | sed -r s/^\[0-9]+\.\([0-9]+\)\.[0-9]+$/\\1/)
 #          newMinorVersion=$((currentMinorVersion + 1))
 #          newVersion=$(echo $VERSION | sed -r s/^\([0-9]+\)\.[0-9]+\.[0-9]+$/\\1.$newMinorVersion.0/)
@@ -93,7 +93,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Bump patch version
         run: |
-          .github/scripts/bump-maven-revision.sh $VERSION patch pet-parent/pom.xml
+          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} patch pet-parent/pom.xml
 #          currentPatchVersion=$(echo $VERSION | sed -r s/^\[0-9]+\.[0-9]+\.\([0-9]+\)$/\\1/)
 #          newPatchVersion=$((currentPatchVersion + 1))
 #          newVersion=$(echo $VERSION | sed -r s/^\([0-9]+\.[0-9]+\)\.[0-9]+$/\\1.$newPatchVersion/)
