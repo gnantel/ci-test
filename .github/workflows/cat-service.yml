@@ -2,6 +2,8 @@ name: Cat Service
 
 on:
   push:
+    branches:
+      - *
     paths:
       - cats/** # Everything under cats
       - pet-*parent/**
