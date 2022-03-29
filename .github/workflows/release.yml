@@ -85,7 +85,28 @@ jobs:
         run: |
           BRANCH_NAME=$(echo ${{ env.VERSION }} | sed -r s/^\([0-9]+\.[0-9]+\.\)[0-9]+$/\\1x/)
           echo Creating maintenance branch $BRANCH_NAME from tag ${{ env.VERSION }}
-          git push origin refs/tags/${{ env.VERSION }}:refs/heads/$BRANCH_NAME
+          git config user.name "GitHub Release Workflow"
+          git config user.email "<>"
+          git checkout $BRANCH_NAME
+          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} patch ${{ env.PARENT_POM }}
+          git commit ${{ env.PARENT_POM }} -m "Bump version to ${{ env.VERSION }}"
+          git push -u origin $BRANCH_NAME
+      # - name: Create maintenance branch
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     BRANCH_NAME=$(echo ${{ env.VERSION }} | sed -r s/^\([0-9]+\.[0-9]+\.\)[0-9]+$/\\1x/)
+      #     echo Creating maintenance branch $BRANCH_NAME from tag ${{ env.VERSION }}
+      #     git push origin refs/tags/${{ env.VERSION }}:refs/heads/$BRANCH_NAME
+      # - name: Bump patch version in new maintenance branch
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     BRANCH_NAME=$(echo ${{ env.VERSION }} | sed -r s/^\([0-9]+\.[0-9]+\.\)[0-9]+$/\\1x/)
+      #     git config user.name "GitHub Release Workflow"
+      #     git config user.email "<>"
+      #     git checkout $BRANCH_NAME
+      #     .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} patch ${{ env.PARENT_POM }}
 
   main-minor-version-bump:
     if: endsWith(github.ref_name, '.0') # Main branch releases result in a minor version number bump
@@ -100,6 +121,16 @@ jobs:
           git config user.name "GitHub Release Workflow"
           git config user.email "<>"
           .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor ${{ env.PARENT_POM }}
+
+          MESSAGE="Bump $BRANCH_NAME $VERSION_TYPE version to $NEW_VERSION"
+          DEV_BRANCH_NAME=feature/bump-$VERSION_TYPE-version-in-$BRANCH_NAME
+
+          git checkout -b $DEV_BRANCH_NAME
+          git commit $POM_FILE -m "$MESSAGE"
+          git push -u origin $DEV_BRANCH_NAME
+          gh pr create --base $BRANCH_NAME --title "$MESSAGE"
+          gh pr --approve
+          gh pr merge --rebase --auto
 
   maintenance-patch-version-bump:
     if: ${{ !endsWith(github.ref_name, '.0') }}
