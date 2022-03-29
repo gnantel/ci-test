@@ -19,7 +19,7 @@ jobs:
       - id: cat-service
         name: Get latest cat-service run number
         run: |
-          .github/scripts/output-last-workflow-run.sh cat-service ${github.repository}
+          .github/scripts/output-last-workflow-run.sh cat-service ${{ github.repository }}
           
   release-notes:
     runs-on: ubuntu-latest
