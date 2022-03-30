@@ -21,7 +21,7 @@ NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\.[0-9]+\)\.[0-9]+$/\\1.
 echo "Updating revision in $POM_FILE from $CURRENT_VERSION to $NEW_VERSION"
 
 grep revision $POM_FILE
-sed -i 's/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revision>/' $POM_FILE
+sed -i "s/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revision>/" $POM_FILE
 grep revision $POM_FILE
 
 #MESSAGE="Bump $BRANCH_NAME $VERSION_TYPE version to $NEW_VERSION"
