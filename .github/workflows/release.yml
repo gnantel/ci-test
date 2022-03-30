@@ -103,8 +103,8 @@ jobs:
           git config user.email "<>"
           .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor ${{ env.PARENT_POM }} feature/bump-main-branch-minor-version
           echo "Creating PR"
-          PR_URL=$(gh pr create --base main --title "Bump version in main branch" --body "Version bump")
-          gh pr merge $PR_URL --admin --delete-branch --rebase
+          gh pr create --base main --title "Bump version in main branch" --body "Version bump"
+          gh pr merge $PR_URL --admin --delete-branch --rebase || true # Purposefully ignore errors since PR merge works anyway
 
   maintenance-branch-patch-version-bump:
     if: ${{ !endsWith(github.ref_name, '.0') }}
