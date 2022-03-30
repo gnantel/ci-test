@@ -9,14 +9,17 @@ if [[ -z $CURRENT_VERSION || ($VERSION_TYPE != 'minor' && $VERSION_TYPE != 'patc
     exit 1
 fi
 
-BRANCH_NAME=main
 if [[ $VERSION_TYPE == 'patch' ]]; then
+    CURRENT_VERSION_COMPONENT=$(echo $CURRENT_VERSION | sed -r s/^\[0-9]+\.[0-9]+\.\([0-9]+\)$/\\1/)
+    NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
+    NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\.[0-9]+\)\.[0-9]+$/\\1.$NEW_VERSION_COMPONENT/)
     BRANCH_NAME=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\.[0-9]+\.\)[0-9]+$/\\1x/)
+else
+    CURRENT_VERSION_COMPONENT=$(echo $CURRENT_VERSION | sed -r s/^\[0-9]+\.\([0-9]+\)\.[0-9]+$/\\1/)
+    NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
+    NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\)\.[0-9]+\.\([0-9]+\)$/\\1.$NEW_VERSION_COMPONENT.\\2/)
+    BRANCH_NAME=main
 fi
-
-CURRENT_VERSION_COMPONENT=$(echo $CURRENT_VERSION | sed -r s/^\[0-9]+\.[0-9]+\.\([0-9]+\)$/\\1/)
-NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
-NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\.[0-9]+\)\.[0-9]+$/\\1.$NEW_VERSION_COMPONENT/)
 
 echo "Updating revision in $POM_FILE from $CURRENT_VERSION to $NEW_VERSION"
 
