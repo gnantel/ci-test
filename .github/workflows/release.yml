@@ -102,7 +102,8 @@ jobs:
           git config user.name "GitHub Release Workflow"
           git config user.email "<>"
           .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor ${{ env.PARENT_POM }} feature/bump-main-branch-minor-version
-          gh pr create --base main --fill
+          echo "Creating PR"
+          gh pr create --base main --title "Bump version in main branch"
           gh pr --approve
           gh pr merge --rebase --auto --delete-branch
 
