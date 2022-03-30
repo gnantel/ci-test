@@ -61,7 +61,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ env.VERSION }} --notes-file release-notes.txt --title ${{ env.VERSION }}
+          gh release create ${{ env.VERSION }} --notes-file release-notes.txt --title "${{ env.VERSION }}"
 
   promote:
     runs-on: ubuntu-latest
