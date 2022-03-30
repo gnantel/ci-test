@@ -87,10 +87,10 @@ jobs:
           echo Creating maintenance branch $BRANCH_NAME from tag ${{ env.VERSION }}
           git config user.name "GitHub Release Workflow"
           git config user.email "<>"
-          git checkout $BRANCH_NAME
-          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} patch ${{ env.PARENT_POM }}
-          git commit ${{ env.PARENT_POM }} -m "Bump version to ${{ env.VERSION }}"
-          git push -u origin $BRANCH_NAME
+#          git checkout -b $BRANCH_NAME
+          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} patch ${{ env.PARENT_POM }} $BRANCH_NAME
+#          git commit ${{ env.PARENT_POM }} -m "Bump version to ${{ env.VERSION }}"
+#          git push -u origin $BRANCH_NAME
       # - name: Create maintenance branch
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -122,13 +122,13 @@ jobs:
           git config user.email "<>"
           .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor ${{ env.PARENT_POM }}
 
-          MESSAGE="Bump $BRANCH_NAME $VERSION_TYPE version to $NEW_VERSION"
-          DEV_BRANCH_NAME=feature/bump-$VERSION_TYPE-version-in-$BRANCH_NAME
+  #        MESSAGE="Bump main branch minor version to $NEW_VERSION"
+          DEV_BRANCH_NAME=feature/bump-main-branch-minor-version
 
-          git checkout -b $DEV_BRANCH_NAME
-          git commit $POM_FILE -m "$MESSAGE"
-          git push -u origin $DEV_BRANCH_NAME
-          gh pr create --base $BRANCH_NAME --title "$MESSAGE"
+ #         git checkout -b $DEV_BRANCH_NAME
+ #         git commit ${{ env.PARENT_POM }} -m "$MESSAGE"
+ #         git push -u origin $DEV_BRANCH_NAME
+          gh pr create --base main
           gh pr --approve
           gh pr merge --rebase --auto
 
@@ -141,6 +141,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          BRANCH_NAME=$(echo ${{ env.VERSION }} | sed -r s/^\([0-9]+\.[0-9]+\.\)[0-9]+$/\\1x/)
           git config user.name "GitHub Release Workflow"
           git config user.email "<>"
-          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} patch ${{ env.PARENT_POM }}
+          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} patch ${{ env.PARENT_POM }} $BRANCH_NAME
