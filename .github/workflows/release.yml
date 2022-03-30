@@ -104,7 +104,6 @@ jobs:
           .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor ${{ env.PARENT_POM }} feature/bump-main-branch-minor-version
           echo "Creating PR"
           gh pr create --base main --title "Bump version in main branch" --body "Version bump"
-#          gh pr review --approve
           gh pr merge --admin --delete-branch --rebase
 
   maintenance-branch-patch-version-bump:
