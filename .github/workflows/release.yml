@@ -99,12 +99,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          BRANCH_NAME=feature/bump-main-branch-minor-version
           git config user.name "GitHub Release Workflow"
           git config user.email "<>"
-          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor ${{ env.PARENT_POM }} feature/bump-main-branch-minor-version
+          .github/scripts/bump-maven-revision.sh ${{ env.VERSION }} minor ${{ env.PARENT_POM }} $BRANCH_NAME
           echo "Creating PR"
           gh pr create --base main --title "Bump version in main branch" --body "Version bump"
-          gh pr merge $PR_URL --admin --delete-branch --rebase || true # Purposefully ignore errors since PR merge works anyway
+          gh pr merge $PR_URL --admin --rebase
+          git push -d origin $BRANCH_NAME
 
   maintenance-branch-patch-version-bump:
     if: ${{ !endsWith(github.ref_name, '.0') }}
