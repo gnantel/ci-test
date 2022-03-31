@@ -20,13 +20,13 @@ runs:
     - run: |
         git config user.name "GitHub Release Workflow"
         git config user.email "<>"
-        git checkout -b ${{ inputs.branch-name }}
+        git checkout -b ${{ inputs.branch }}
         git commit "${{ inputs.files }}" -m "${{ inputs.message }}"
-        git push -u origin ${{ inputs.branch-name }}
+        git push -u origin ${{ inputs.branch }}
       shell: bash
     - if: ${{ inputs.pull-request-base-branch }}
       run: |
         gh pr create --base ${{ inputs.pull-request-base-branch }} --title ${{ inputs.message }} --body ${{ inputs.message }}
         gh pr merge --admin --rebase
-        git push -d origin ${{ inputs.branch-name }}
+        git push -d origin ${{ inputs.branch }}
       shell: bash

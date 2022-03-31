@@ -119,7 +119,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH_NAME: ${{ steps.maintenance-branch-name.outputs.branch-name }}
         with:
-          branch-name: ${{ env.BRANCH_NAME }}
+          branch: ${{ env.BRANCH_NAME }}
           files: ${{ env.PARENT_POM }}
           message: 'Bump minor version in ${{ env.BRANCH_NAME }} to ${{ steps.bump-version.outputs.new-version }}'
       # - name: Create maintenance branch
@@ -143,6 +143,8 @@ jobs:
         with:
           pom-file: ${{ env.PARENT_POM }}
           version-type: minor
+      - run: |
+          echo "NEW VERSION: ${{ steps.bump-version.outputs.new-version }}""
       - uses: ./.github/actions/commit-and-push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -190,7 +192,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH_NAME: ${{ steps.maintenance-branch-name.outputs.branch-name }}
         with:
-          branch-name: ${{ env.BRANCH_NAME }}
+          branch: ${{ env.BRANCH_NAME }}
           files: ${{ env.PARENT_POM }}
           message: 'Bump minor version in ${{ env.BRANCH_NAME }} to ${{ steps.bump-version.outputs.new-version }}'
 

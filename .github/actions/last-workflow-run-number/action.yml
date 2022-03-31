@@ -17,8 +17,8 @@ runs:
   steps:
     - id: get-last-run-number
       run: |
-        API_QUERY=repos/${{ github.repository }}/actions/workflows/.github%2fworkflows%2f${{ inputs.workflow-name }}.yml/runs?per_page=1&branch=${{ inputs.branch-name }}
-        echo $API_QUERY
-        gh api $API_QUERY --jq ".workflow_runs[].run_number"
+        API_QUERY="repos/${{ github.repository }}/actions/workflows/.github%2fworkflows%2f${{ inputs.workflow-name }}.yml/runs?per_page=1&branch=${{ inputs.branch-name }}"
+        echo "$API_QUERY"
+        gh api "$API_QUERY" --jq ".workflow_runs[].run_number"
         echo "::set-output name=last-run-number::$RUN_NUMBER"
       shell: bash

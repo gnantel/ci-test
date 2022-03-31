@@ -14,7 +14,8 @@ outputs:
     value: ${{ steps.get-current.outputs.revision }}
   new-version:
     description: The new version in the Maven POM file after the update
-    value: ${{ steps.bump-minor.outputs.revision || steps.bump-patch.outputs.revision }}
+    value: ${{ format('{}{}', steps.bump-minor.outputs.revision, steps.bump-patch.outputs.revision) }}
+    # value: ${{ steps.bump-minor.outputs.revision || steps.bump-patch.outputs.revision }}
 runs:
   using: composite
   steps:
