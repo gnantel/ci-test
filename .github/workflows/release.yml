@@ -51,8 +51,6 @@ jobs:
         with:
           workflow-name: cat-service
           branch-name: ${{ steps.base-branch-name.outputs.branch-name }}
-      - run: |
-          echo ${{ steps.cat-service.outputs.last-run-number }}
       # - uses: actions/checkout@v2
       # - id: cat-service
       #   name: Get latest cat-service run number
@@ -150,6 +148,7 @@ jobs:
           version-type: minor
       - run: |
           echo "NEW VERSION: ${{ steps.bump-version.outputs.new-version }}"
+          gh config set git_protocol ssh -h github.com
       - uses: ./.github/actions/commit-and-push
         with:
           branch: feature/bump-main-branch-minor-version
