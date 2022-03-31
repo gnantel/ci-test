@@ -1,7 +1,7 @@
 name: Commit and Push local changes
 description: Creates a commit based on local file changes and pushes them to the remote repository
 inputs:
-  branch-name:
+  branch:
     description: the name of the branch to commit to
     required: true
   files:

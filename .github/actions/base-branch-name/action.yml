@@ -1,0 +1,23 @@
+name: Determine base branch name
+description: "Given a version, outputs the name of the base branch for that version. For versions ending in '.0', this is the main branch. Otherwise, this is the maintenance branch associated with the version."
+inputs:
+  version:
+    description: The version for which to output the base branch
+    required: true
+outputs:
+  branch-name:
+    description: The base branch name associated with the given version
+    value: ${{ steps.main-branch.outputs.branch-name || steps.maintenance-branch.outputs.branch-name }}
+runs:
+  using: composite
+  steps:
+    - id: main-branch
+      if: ${{ endsWith(inputs.version, '.0') }}
+      run: |
+        echo "::set-output name=branch-name::main"
+      shell: bash
+    - id: maintenance-branch
+      if: ${{ !endsWith(inputs.version, '.0') }}
+      uses: ./.github/actions/maintenance-branch-name
+      with:
+        version: ${{ inputs.version }}

@@ -147,10 +147,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          branch-name: feature/bump-main-branch-minor-version
+          branch: feature/bump-main-branch-minor-version
           files: $PARENT_POM
           message: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
-          pull-request-branch-name: main
+          pull-request-base-branch: main
   # main-branch-minor-version-bump:
   #   if: endsWith(github.ref_name, '.0') # Main branch releases result in a minor version number bump
   #   runs-on: ubuntu-latest
