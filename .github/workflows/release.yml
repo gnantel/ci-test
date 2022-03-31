@@ -40,8 +40,8 @@ jobs:
       cat-service: ${{ steps.cat-service.outputs.last-run-number }}
     steps:
       - uses: actions/checkout@v2
-      - id: determine-branch-name
-        uses: ./.github/actions/determine-branch-name
+      - id: base-branch-name
+        uses: ./.github/actions/base-branch-name
         with:
           version: ${{ env.VERSION }}
       - id: cat-service
@@ -50,7 +50,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           workflow-name: cat-service
-          branch-name: ${{ steps.determine-branch-name.outputs.branch-name }}
+          branch-name: ${{ steps.base-branch-name.outputs.branch-name }}
       # - uses: actions/checkout@v2
       # - id: cat-service
       #   name: Get latest cat-service run number
@@ -105,8 +105,8 @@ jobs:
     needs: validate-version
     steps:
       - uses: actions/checkout@v2
-      - id: determine-branch-name
-        uses: ./.github/actions/determine-branch-name
+      - id: maintenance-branch-name
+        uses: ./.github/actions/maintenance-branch-name
         with:
           version: ${{ env.VERSION }}
       - id: bump-version
@@ -117,7 +117,7 @@ jobs:
       - uses: ./.github/actions/commit-and-push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: ${{ steps.determine-branch-name.outputs.branch-name }}
+          BRANCH_NAME: ${{ steps.maintenance-branch-name.outputs.branch-name }}
         with:
           branch-name: ${{ env.BRANCH_NAME }}
           files: ${{ env.PARENT_POM }}
@@ -176,8 +176,8 @@ jobs:
     needs: validate-version
     steps:
       - uses: actions/checkout@v2
-      - id: determine-branch-name
-        uses: ./.github/actions/determine-branch-name
+      - id: maintenance-branch-name
+        uses: ./.github/actions/maintenance-branch-name
         with:
           version: ${{ env.VERSION }}
       - id: bump-version
@@ -188,7 +188,7 @@ jobs:
       - uses: ./.github/actions/commit-and-push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: ${{ steps.determine-branch-name.outputs.branch-name }}
+          BRANCH_NAME: ${{ steps.maintenance-branch-name.outputs.branch-name }}
         with:
           branch-name: ${{ env.BRANCH_NAME }}
           files: ${{ env.PARENT_POM }}
