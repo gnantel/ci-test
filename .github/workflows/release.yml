@@ -179,7 +179,7 @@ jobs:
         with:
           github-token: ${{ secrets.ACTIONS_PAT }}
           number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-      - if: ${{ steps.auto-merge.outcome == failure }}
+      - if: ${{ steps.auto-merge.outcome == 'failure' }}
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_PAT }}
         run: |
