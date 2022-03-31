@@ -32,22 +32,22 @@ runs:
         commit-message: ${{ inputs.message }}
         title: ${{ inputs.message }}
         body: ${{ inputs.message }}
-    - id: auto-merge
-      uses: peter-evans/enable-pull-request-automerge@v1.1.0
-      if: steps.create-pull-request.outputs.pull-request-operation == 'created'
-      continue-on-error: true
-      with:
-        token: ${{ inputs.approver-token }}
-        pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-        merge-method: rebase
     - uses: juliangruber/approve-pull-request-action@v1.0.1
       if: steps.create-pull-request.outputs.pull-request-operation == 'created'
       with:
         github-token: ${{ inputs.approver-token }}
         number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+    - id: auto-merge
+      uses: peter-evans/enable-pull-request-automerge@v1.1.0
+      if: steps.create-pull-request.outputs.pull-request-operation == 'created'
+      with:
+        token: ${{ inputs.approver-token }}
+        pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        merge-method: rebase
     # If auto-merge is not permitted, attempt to manually merge immediately
-    - if: ${{ steps.auto-merge.outcome == 'failure' }}
+    - if: ${{ failure() }}
       env:
         GITHUB_TOKEN: ${{ inputs.approver-token }}
       run: |
         gh pr merge ${{ steps.create-pull-request.outputs.pull-request-number }} --rebase
+      shell: bash
