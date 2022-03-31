@@ -146,10 +146,9 @@ jobs:
         with:
           pom-file: ${{ env.PARENT_POM }}
           version-type: minor
-      - run: |
-          echo "NEW VERSION: ${{ steps.bump-version.outputs.new-version }}"
-          gh config set git_protocol ssh -h github.com
       - uses: ./.github/actions/commit-and-push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: feature/bump-main-branch-minor-version
           files: $PARENT_POM
