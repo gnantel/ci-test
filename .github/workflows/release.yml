@@ -155,20 +155,20 @@ jobs:
           message: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
           # pull-request-base-branch: main
       - id: create-pull-request
-        uses: peterevans/create-pull-request@v3.10.1
+        uses: peter-evans/create-pull-request@v3.10.1
         with:
           base: main
           branch: feature/bump-main-branch-minor-version
           delete-branch: true
           title: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
           body: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
-      - uses: peterevans/enable-pull-request-automerge@v1.1.0
+      - uses: peter-evans/enable-pull-request-automerge@v1.1.0
         if: steps.create-pull-request.outputs.pull-request-operation == 'created'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
           merge-method: rebase
-      - uses: juliangruber/approve-pull-requests-action@v1.0.1
+      - uses: juliangruber/approve-pull-request-action@v1.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ steps.create-pull-request.outputs.pull-request-number }}
