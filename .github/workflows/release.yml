@@ -116,7 +116,7 @@ jobs:
           version-type: patch
       - uses: ./.github/actions/commit-and-push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           BRANCH_NAME: ${{ steps.maintenance-branch-name.outputs.branch-name }}
         with:
           branch: ${{ env.BRANCH_NAME }}
@@ -147,7 +147,7 @@ jobs:
           echo "NEW VERSION: ${{ steps.bump-version.outputs.new-version }}"
       - uses: ./.github/actions/commit-and-push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         with:
           branch: feature/bump-main-branch-minor-version
           files: $PARENT_POM
@@ -189,7 +189,7 @@ jobs:
           version-type: patch
       - uses: ./.github/actions/commit-and-push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           BRANCH_NAME: ${{ steps.maintenance-branch-name.outputs.branch-name }}
         with:
           branch: ${{ env.BRANCH_NAME }}
