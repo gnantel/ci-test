@@ -146,14 +146,14 @@ jobs:
         with:
           pom-file: ${{ env.PARENT_POM }}
           version-type: minor
-      - uses: ./.github/actions/commit-and-push
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY_NO_HEADER }}
-        with:
-          branch: feature/bump-main-branch-minor-version
-          files: $PARENT_POM
-          message: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
-          # pull-request-base-branch: main
+      # - uses: ./.github/actions/commit-and-push
+      #   # env:
+      #   #   GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY_NO_HEADER }}
+      #   with:
+      #     branch: feature/bump-main-branch-minor-version
+      #     files: $PARENT_POM
+      #     message: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
+      #     # pull-request-base-branch: main
       - id: create-pull-request
         uses: peter-evans/create-pull-request@v3.10.1
         with:
