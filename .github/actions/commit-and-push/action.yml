@@ -26,7 +26,7 @@ runs:
       shell: bash
     - if: ${{ inputs.pull-request-base-branch }}
       run: |
-        gh pr create --base ${{ inputs.pull-request-base-branch }} --title ${{ inputs.message }} --body ${{ inputs.message }}
+        gh pr create --base ${{ inputs.pull-request-base-branch }} --title "${{ inputs.message }}" --body "${{ inputs.message }}"
         gh pr merge --admin --rebase
         git push -d origin ${{ inputs.branch }}
       shell: bash
