@@ -51,6 +51,8 @@ jobs:
         with:
           workflow-name: cat-service
           branch-name: ${{ steps.base-branch-name.outputs.branch-name }}
+      - run: |
+          echo ${{ steps.cat-service.outputs.last-run-number }}
       # - uses: actions/checkout@v2
       # - id: cat-service
       #   name: Get latest cat-service run number
@@ -105,6 +107,8 @@ jobs:
     needs: validate-version
     steps:
       - uses: actions/checkout@v2
+        with:
+          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
       - id: maintenance-branch-name
         uses: ./.github/actions/maintenance-branch-name
         with:
@@ -116,7 +120,6 @@ jobs:
           version-type: patch
       - uses: ./.github/actions/commit-and-push
         env:
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           BRANCH_NAME: ${{ steps.maintenance-branch-name.outputs.branch-name }}
         with:
           branch: ${{ env.BRANCH_NAME }}
@@ -138,6 +141,8 @@ jobs:
     needs: validate-version
     steps:
       - uses: actions/checkout@v2
+        with:
+          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
       - id: bump-version
         uses: ./.github/actions/bump-maven-revision
         with:
@@ -146,8 +151,6 @@ jobs:
       - run: |
           echo "NEW VERSION: ${{ steps.bump-version.outputs.new-version }}"
       - uses: ./.github/actions/commit-and-push
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         with:
           branch: feature/bump-main-branch-minor-version
           files: $PARENT_POM
@@ -178,6 +181,8 @@ jobs:
     needs: validate-version
     steps:
       - uses: actions/checkout@v2
+        with:
+          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
       - id: maintenance-branch-name
         uses: ./.github/actions/maintenance-branch-name
         with:
@@ -189,7 +194,6 @@ jobs:
           version-type: patch
       - uses: ./.github/actions/commit-and-push
         env:
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           BRANCH_NAME: ${{ steps.maintenance-branch-name.outputs.branch-name }}
         with:
           branch: ${{ env.BRANCH_NAME }}
