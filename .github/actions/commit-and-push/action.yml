@@ -1,0 +1,32 @@
+name: Commit and Push local changes
+description: Creates a commit based on local file changes and pushes them to the remote repository
+inputs:
+  branch-name:
+    description: the name of the branch to commit to
+    required: true
+  files:
+    description: the files to commit
+    required: true
+    default: '.'
+  message:
+    description: the commit message
+    required: true
+  pull-request-base-branch:
+    description: create an associated pull request for the commit, using given base branch
+    required: false
+runs:
+  using: composite
+  steps:
+    - run: |
+        git config user.name "GitHub Release Workflow"
+        git config user.email "<>"
+        git checkout -b ${{ inputs.branch-name }}
+        git commit "${{ inputs.files }}" -m "${{ inputs.message }}"
+        git push -u origin ${{ inputs.branch-name }}
+      shell: bash
+    - if: ${{ inputs.pull-request-base-branch }}
+      run: |
+        gh pr create --base ${{ inputs.pull-request-base-branch }} --title ${{ inputs.message }} --body ${{ inputs.message }}
+        gh pr merge --admin --rebase
+        git push -d origin ${{ inputs.branch-name }}
+      shell: bash

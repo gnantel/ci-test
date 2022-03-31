@@ -1,0 +1,45 @@
+name: 'Bump Maven revision number'
+description: 'Bump the minor or patch revision number in the given parent Maven POM file'
+inputs:
+  pom-file:
+    description: The Maven POM file to update
+    required: true
+    default: pom.xml
+  version-type:
+    description: The version number component to update (can be minor or patch)
+    required: true
+outputs:
+  previous-version:
+    description: The previous version in the Maven POM file before the update
+    value: ${{ steps.get-current.outputs.revision }}
+  new-version:
+    description: The new version in the Maven POM file after the update
+    value: ${{ steps.bump-minor.outputs.revision || steps.bump-patch.outputs.revision }}
+runs:
+  using: composite
+  steps:
+    - id: get-current
+      run: |
+        CURRENT_VERSION=$(sed -n -r 's/.+<revision>([0-9]+\.[0-9]+\.[0-9]+)<\/revision>/\1/p' ${{ inputs.pom-file }})
+        echo "::set-output name=revision::$CURRENT_VERSION"
+      shell: bash
+    - id: bump-minor
+      needs: get-current
+      if: ${{ inputs.version-type == 'minor' }}
+      run: |
+        CURRENT_VERSION=${{ needs.get-current.outputs.revision }}
+        CURRENT_VERSION_COMPONENT=$(echo $CURRENT_VERSION | sed -r s/^\[0-9]+\.\([0-9]+\)\.[0-9]+$/\\1/)
+        NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
+        NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\)\.[0-9]+\.\([0-9]+\)$/\\1.$NEW_VERSION_COMPONENT.\\2/)
+        sed -i "s/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revision>/" $POM_FILE
+        echo "::set-output name=revision:$NEW_VERSION"
+    - id: bump-patch
+      needs: get-current
+      if: ${{ inputs.version-type == 'patch' }}
+      run: |
+        CURRENT_VERSION=${{ needs.get-current.outputs.revision }}
+        CURRENT_VERSION_COMPONENT=$(echo $CURRENT_VERSION | sed -r s/^\[0-9]+\.[0-9]+\.\([0-9]+\)$/\\1/)
+        NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
+        NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\.[0-9]+\)\.[0-9]+$/\\1.$NEW_VERSION_COMPONENT/)
+        sed -i "s/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revision>/" $POM_FILE
+        echo "::set-output name=revision:$NEW_VERSION"
