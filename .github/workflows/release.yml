@@ -39,6 +39,7 @@ jobs:
     outputs:
       cat-service: ${{ steps.cat-service.outputs.last-run-number }}
     steps:
+      - uses: actions/checkout@v2
       - id: determine-branch-name
         uses: ./.github/actions/determine-branch-name
         with:

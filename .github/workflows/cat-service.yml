@@ -9,7 +9,7 @@ on:
       - pet-*parent/**
       - .github/workflows/cat-service.yml
       - .github/workflows/application-build.yml
-      - .github/actions/**
+      - .github/actions/setup-maven/**
       - Dockerfile
 
 jobs:

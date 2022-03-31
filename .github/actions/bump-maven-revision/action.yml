@@ -24,10 +24,9 @@ runs:
         echo "::set-output name=revision::$CURRENT_VERSION"
       shell: bash
     - id: bump-minor
-      needs: get-current
       if: ${{ inputs.version-type == 'minor' }}
       run: |
-        CURRENT_VERSION=${{ needs.get-current.outputs.revision }}
+        CURRENT_VERSION=${{ steps.get-current.outputs.revision }}
         CURRENT_VERSION_COMPONENT=$(echo $CURRENT_VERSION | sed -r s/^\[0-9]+\.\([0-9]+\)\.[0-9]+$/\\1/)
         NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
         NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\)\.[0-9]+\.\([0-9]+\)$/\\1.$NEW_VERSION_COMPONENT.\\2/)
@@ -35,10 +34,9 @@ runs:
         echo "::set-output name=revision:$NEW_VERSION"
       shell: bash
     - id: bump-patch
-      needs: get-current
       if: ${{ inputs.version-type == 'patch' }}
       run: |
-        CURRENT_VERSION=${{ needs.get-current.outputs.revision }}
+        CURRENT_VERSION=${{ steps.get-current.outputs.revision }}
         CURRENT_VERSION_COMPONENT=$(echo $CURRENT_VERSION | sed -r s/^\[0-9]+\.[0-9]+\.\([0-9]+\)$/\\1/)
         NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
         NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\.[0-9]+\)\.[0-9]+$/\\1.$NEW_VERSION_COMPONENT/)
