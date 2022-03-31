@@ -147,13 +147,32 @@ jobs:
           pom-file: ${{ env.PARENT_POM }}
           version-type: minor
       - uses: ./.github/actions/commit-and-push
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY_NO_HEADER }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY_NO_HEADER }}
         with:
           branch: feature/bump-main-branch-minor-version
           files: $PARENT_POM
           message: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
-          pull-request-base-branch: main
+          # pull-request-base-branch: main
+      - id: create-pull-request
+        uses: peterevans/create-pull-request@v4
+        with:
+          base: main
+          branch: feature/bump-main-branch-minor-version
+          delete-branch: true
+          title: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
+          body: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
+      - uses: peterevans/enable-pull-request-automerge@v2
+        if: steps.create-pull-request.outputs.pull-request-operation == 'created'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+          merge-method: rebase
+      - uses: juliangruber/approve-pull-requests-action@v1.1.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+
   # main-branch-minor-version-bump:
   #   if: endsWith(github.ref_name, '.0') # Main branch releases result in a minor version number bump
   #   runs-on: ubuntu-latest
