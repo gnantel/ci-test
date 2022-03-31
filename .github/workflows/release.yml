@@ -40,11 +40,11 @@ jobs:
       cat-service: ${{ steps.cat-service.outputs.last-run-number }}
     steps:
       - id: determine-branch-name
-        uses: .github/actions/determine-branch-name
+        uses: ./.github/actions/determine-branch-name
         with:
           version: ${{ env.VERSION }}
       - id: cat-service
-        uses: .github/actions/last-workflow-run-number
+        uses: ./.github/actions/last-workflow-run-number
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -105,15 +105,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: determine-branch-name
-        uses: .github/actions/determine-branch-name
+        uses: ./.github/actions/determine-branch-name
         with:
           version: ${{ env.VERSION }}
       - id: bump-version
-        uses: .github/actions/bump-maven-revision
+        uses: ./.github/actions/bump-maven-revision
         with:
           pom-file: ${{ env.PARENT_POM }}
           version-type: patch
-      - uses: .github/actions/commit-and-push
+      - uses: ./.github/actions/commit-and-push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH_NAME: ${{ steps.determine-branch-name.outputs.branch-name }}
@@ -138,11 +138,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: bump-version
-        uses: .github/actions/bump-maven-revision
+        uses: ./.github/actions/bump-maven-revision
         with:
           pom-file: ${{ env.PARENT_POM }}
           version-type: minor
-      - uses: .github/actions/commit-and-push
+      - uses: ./.github/actions/commit-and-push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -176,15 +176,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: determine-branch-name
-        uses: .github/actions/determine-branch-name
+        uses: ./.github/actions/determine-branch-name
         with:
           version: ${{ env.VERSION }}
       - id: bump-version
-        uses: .github/actions/bump-maven-revision
+        uses: ./.github/actions/bump-maven-revision
         with:
           pom-file: ${{ env.PARENT_POM }}
           version-type: patch
-      - uses: .github/actions/commit-and-push
+      - uses: ./.github/actions/commit-and-push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH_NAME: ${{ steps.determine-branch-name.outputs.branch-name }}

@@ -33,6 +33,7 @@ runs:
         NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\)\.[0-9]+\.\([0-9]+\)$/\\1.$NEW_VERSION_COMPONENT.\\2/)
         sed -i "s/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revision>/" $POM_FILE
         echo "::set-output name=revision:$NEW_VERSION"
+      shell: bash
     - id: bump-patch
       needs: get-current
       if: ${{ inputs.version-type == 'patch' }}
@@ -43,3 +44,4 @@ runs:
         NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\.[0-9]+\)\.[0-9]+$/\\1.$NEW_VERSION_COMPONENT/)
         sed -i "s/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revision>/" $POM_FILE
         echo "::set-output name=revision:$NEW_VERSION"
+      shell: bash
