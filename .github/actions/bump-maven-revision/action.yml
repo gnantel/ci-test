@@ -14,8 +14,8 @@ outputs:
     value: ${{ steps.get-current.outputs.revision }}
   new-version:
     description: The new version in the Maven POM file after the update
-    value: ${{ format('{0}{1}', steps.bump-minor.outputs.revision, steps.bump-patch.outputs.revision) }}
-    # value: ${{ steps.bump-minor.outputs.revision || steps.bump-patch.outputs.revision }}
+    # value: ${{ format('{0}{1}', steps.bump-minor.outputs.revision, steps.bump-patch.outputs.revision) }}
+    value: ${{ steps.bump-minor.outputs.revision || steps.bump-patch.outputs.revision }}
 runs:
   using: composite
   steps:
@@ -32,7 +32,7 @@ runs:
         NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
         NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\)\.[0-9]+\.\([0-9]+\)$/\\1.$NEW_VERSION_COMPONENT.\\2/)
         sed -i "s/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revision>/" ${{ inputs.pom-file }}
-        echo "::set-output name=revision:$NEW_VERSION"
+        echo "::set-output name=revision::$NEW_VERSION"
       shell: bash
     - id: bump-patch
       if: ${{ inputs.version-type == 'patch' }}
@@ -42,5 +42,5 @@ runs:
         NEW_VERSION_COMPONENT=$((CURRENT_VERSION_COMPONENT + 1))
         NEW_VERSION=$(echo $CURRENT_VERSION | sed -r s/^\([0-9]+\.[0-9]+\)\.[0-9]+$/\\1.$NEW_VERSION_COMPONENT/)
         sed -i "s/<revision>$CURRENT_VERSION<\/revision>/<revision>$NEW_VERSION<\/revision>/" ${{ inputs.pom-file }}
-        echo "::set-output name=revision:$NEW_VERSION"
+        echo "::set-output name=revision::$NEW_VERSION"
       shell: bash

@@ -144,7 +144,7 @@ jobs:
           pom-file: ${{ env.PARENT_POM }}
           version-type: minor
       - run: |
-          echo "NEW VERSION: ${{ steps.bump-version.outputs.new-version }}""
+          echo "NEW VERSION: ${{ steps.bump-version.outputs.new-version }}"
       - uses: ./.github/actions/commit-and-push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
