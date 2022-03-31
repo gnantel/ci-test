@@ -139,8 +139,8 @@ jobs:
     needs: validate-version
     steps:
       - uses: actions/checkout@v2
-        with:
-          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        # with:
+        #   ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
       - id: bump-version
         uses: ./.github/actions/bump-maven-revision
         with:
@@ -159,13 +159,15 @@ jobs:
         env:
           message: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
         with:
+          # token: ${{ secrets.GITHUB_TOKEN }}
           base: main
           branch: feature/bump-main-branch-minor-version
           delete-branch: true
           commit-message: ${{ env.message }}
           title: ${{ env.message }}
           body: ${{ env.message }}
-      - uses: peter-evans/enable-pull-request-automerge@v1.1.0
+      - id: auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v1.1.0
         if: steps.create-pull-request.outputs.pull-request-operation == 'created'
         continue-on-error: true
         with:
@@ -175,12 +177,13 @@ jobs:
       - uses: juliangruber/approve-pull-request-action@v1.0.1
         if: steps.create-pull-request.outputs.pull-request-operation == 'created'
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.ACTIONS_PAT }}
           number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-      # - env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     gh pr merge ${{ steps.create-pull-request.outputs.pull-request-number }} --admin --rebase
+      - if: ${{ steps.auto-merge.outcome == failure }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_PAT }}
+        run: |
+          gh pr merge ${{ steps.create-pull-request.outputs.pull-request-number }} --rebase
 
   # main-branch-minor-version-bump:
   #   if: endsWith(github.ref_name, '.0') # Main branch releases result in a minor version number bump
