@@ -148,7 +148,7 @@ jobs:
           version-type: minor
       - uses: ./.github/actions/commit-and-push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY_NO_HEADER }}
         with:
           branch: feature/bump-main-branch-minor-version
           files: $PARENT_POM
