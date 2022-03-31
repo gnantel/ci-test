@@ -1,0 +1,53 @@
+name: Create and automatically merge pull request
+description: Creates a new pull request based on local changes, approves it, and either sets it to be automatically merged if possible or else merges it immediately
+inputs:
+  message:
+    description: Message for commit, pull request title, and pull request body
+    required: false
+    default: Auto-generated actions-bot pull request
+  base:
+    description: base branch for the pull request
+    required: false
+    default: main
+  branch:
+    description: name of the pull request branch
+    required: false
+    default: feature/auto-generated-pull-request
+  approver-token:
+    description: token of the user that will approve and merge the the pull request
+    required: true
+outputs:
+  pull-request-number:
+    description: the number of the newly created pull request
+    value: ${{ steps.create-pull-request.outputs.pull-request-number }}
+runs:
+  using: composite
+  steps:
+    - id: create-pull-request
+      uses: peter-evans/create-pull-request@v3.10.1
+      with:
+        base: ${{ inputs.base }}
+        branch: ${{ inputs.branch }}
+        delete-branch: true
+        commit-message: ${{ inputs.message }}
+        title: ${{ inputs.message }}
+        body: ${{ inputs.message }}
+    - id: auto-merge
+      uses: peter-evans/enable-pull-request-automerge@v1.1.0
+      if: steps.create-pull-request.outputs.pull-request-operation == 'created'
+      continue-on-error: true
+      with:
+        token: ${{ inputs.approver-token }}
+        pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        merge-method: rebase
+    - uses: juliangruber/approve-pull-request-action@v1.0.1
+      if: steps.create-pull-request.outputs.pull-request-operation == 'created'
+      with:
+        github-token: ${{ inputs.approver-token }}
+        number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+    # If auto-merge is not permitted, attempt to manually merge immediately
+    - if: ${{ steps.auto-merge.outcome == 'failure' }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.approver-token }}
+      run: |
+        gh pr merge ${{ steps.create-pull-request.outputs.pull-request-number }} --rebase

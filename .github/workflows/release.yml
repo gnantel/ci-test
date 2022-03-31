@@ -115,36 +115,12 @@ jobs:
         with:
           pom-file: ${{ env.PARENT_POM }}
           version-type: minor
-      - id: create-pull-request
-        uses: peter-evans/create-pull-request@v3.10.1
-        env:
-          message: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
+      - uses: ./.github/actions/create-and-auto-merge-pull-request
         with:
+          message: 'Bump minor version in main to ${{ steps.bump-version.outputs.new-version }}'
           base: main
           branch: feature/bump-main-branch-minor-version
-          delete-branch: true
-          commit-message: ${{ env.message }}
-          title: ${{ env.message }}
-          body: ${{ env.message }}
-      - id: auto-merge
-        uses: peter-evans/enable-pull-request-automerge@v1.1.0
-        if: steps.create-pull-request.outputs.pull-request-operation == 'created'
-        continue-on-error: true
-        with:
-          token: ${{ secrets.ACTIONS_PAT }}
-          pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-          merge-method: rebase
-      - uses: juliangruber/approve-pull-request-action@v1.0.1
-        if: steps.create-pull-request.outputs.pull-request-operation == 'created'
-        with:
-          github-token: ${{ secrets.ACTIONS_PAT }}
-          number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-      # If auto-merge is not permitted, attempt to manually merge immediately
-      - if: ${{ steps.auto-merge.outcome == 'failure' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_PAT }}
-        run: |
-          gh pr merge ${{ steps.create-pull-request.outputs.pull-request-number }} --rebase
+          approver-token: ${{ secrets.ACTIONS_PAT }}
 
   maintenance-branch-patch-version-bump:
     if: ${{ !endsWith(github.ref_name, '.0') }}
